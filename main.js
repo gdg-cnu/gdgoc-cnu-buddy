@@ -469,10 +469,28 @@ function sendToMascot(channel, payload) {
 function scheduleSleep() {
   if (sleepTimer) clearTimeout(sleepTimer);
   asleep = false;
+  if (!CONFIG.idleSleepMs) return; // 0 = 잠들지 않음
   sleepTimer = setTimeout(() => {
     asleep = true;
     sendToMascot('mascot:state', { state: 'sleeping' });
   }, CONFIG.idleSleepMs);
+}
+
+// 트레이 "잠드는 시간" — 고른 값은 사용 안내의 "다시 보지 않기"와 같은 사용자 파일에 남긴다
+const SLEEP_CHOICES = [
+  ['1분', TIME.MIN],
+  ['3분', 3 * TIME.MIN],
+  ['5분', 5 * TIME.MIN],
+  ['10분', 10 * TIME.MIN],
+  ['30분', 30 * TIME.MIN],
+  ['잠들지 않음', 0],
+];
+function setIdleSleep(ms) {
+  CONFIG.idleSleepMs = ms;
+  writeUiState({ idleSleepMs: ms });
+  if (asleep) sendToMascot('mascot:state', { state: 'idle' }); // 자던 중이면 깨워서 새 시간으로 다시 센다
+  scheduleSleep();
+  rebuildTray();
 }
 
 // ---------------------------------------------------------------------------
@@ -865,6 +883,15 @@ function buildTrayMenu() {
         rebuildTray();
       },
     },
+    {
+      label: '😴 잠드는 시간',
+      submenu: SLEEP_CHOICES.map(([label, ms]) => ({
+        label,
+        type: 'radio',
+        checked: CONFIG.idleSleepMs === ms,
+        click: () => setIdleSleep(ms),
+      })),
+    },
     { label: '📖 사용 안내', click: () => toggleHelp() },
     { type: 'separator' },
     { label: '종료', click: () => app.quit() },
@@ -1001,6 +1028,9 @@ if (gotSingleInstanceLock) {
 
   app.whenReady().then(() => {
     applyAppBranding();
+    // 트레이에서 고른 잠드는 시간이 config.json 보다 우선 — 가장 최근에 사용자가 직접 고른 값이라서
+    const savedSleep = readUiState().idleSleepMs;
+    if (Number.isFinite(savedSleep) && savedSleep >= 0) CONFIG.idleSleepMs = savedSleep;
     if (process.platform === 'darwin' && app.dock) app.dock.hide(); // 독 아이콘 숨김
     createWindow();
     createTray();

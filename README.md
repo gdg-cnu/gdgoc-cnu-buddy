@@ -17,7 +17,7 @@
 - 빌드/테스트 메이트 — `gdgoc` / `mascot-watch` 로 아무 명령이나 감싸기
 - Web Vitals 피드백 — `gdgoc npm run dev` 또는 Vite 플러그인으로 LCP·INP·CLS에 반응
 - 투명 · 항상 위 · 드래그 · 트레이 상주 · 빈 영역 클릭 통과
-- 클릭하면 인사, 두 번 클릭하면 종강 D-day, 트레이에서 학기 안내·사용 안내·방해 금지
+- 클릭하면 인사, 두 번 클릭하면 종강 D-day, 트레이에서 학기 안내·사용 안내·방해 금지·잠드는 시간
 - 웹훅 `http://127.0.0.1:7842` — 알림 · 상태 · 활동 · vitals
 - 종강 날짜·세션 알림 — [shared/conference.js](shared/conference.js)
 - 유휴 시 잠자기 · 전역 단축키 `⌘⇧M` / `⌘⇧H` (Windows·Linux는 `Ctrl+Shift+…`)
@@ -194,7 +194,7 @@ node scripts/send.js state sleeping
 | 클릭 | 인사 + 한마디 |
 | 두 번 클릭 | 종강 D-day 팝업 |
 | 드래그 | 위치 이동 |
-| 트레이 | 학기 안내 · 방해 금지 · 사용 안내 · 종료 |
+| 트레이 | 학기 안내 · 방해 금지 · 잠드는 시간 · 사용 안내 · 종료 |
 | `⌘⇧M` / `Ctrl+Shift+M` | 숨김 / 표시 |
 | `⌘⇧H` / `Ctrl+Shift+H` | 인사 |
 
@@ -231,7 +231,7 @@ node scripts/send.js state sleeping
   "port": 7842,
   "token": "",
   "corner": "bottom-right",
-  "idleSleepMs": 90000,
+  "idleSleepMs": 300000,
   "guideTitle": "학기 안내",
   "guideSubtitle": ""
 }

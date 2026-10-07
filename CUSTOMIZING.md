@@ -38,7 +38,7 @@
 - 마스코트 창 **315×260**, 투명 · 항상 위 · 프레임 없음 · 독/작업표시줄 숨김 · 전체화면 위에도 표시. 빈 영역은 **클릭 통과**(캐릭터/말풍선 위에서만 마우스 활성).
 - 캐릭터는 창 좌하단의 **140×140** 캔버스에 키 **96px** 로 그립니다 (`renderer/mascot.js` 의 `LW`·`LH`·`CHAR_H`).
 - 위치는 `corner` 설정(`bottom-right` 기본, 4모서리) + 걷기 시 반대 모서리로 왕복.
-- 유휴 `idleSleepMs`(기본 90초) 경과 시 잠들기. 전역 단축키 `Cmd/Ctrl+Shift+M`(숨김/표시), `Cmd/Ctrl+Shift+H`(인사).
+- 유휴 `idleSleepMs`(기본 5분, 0이면 잠들지 않음) 경과 시 잠들기. 트레이 **잠드는 시간**에서 고른 값은 사용자 폴더의 `ui-state.json`에 저장되고 `config.json`보다 우선합니다. 전역 단축키 `Cmd/Ctrl+Shift+M`(숨김/표시), `Cmd/Ctrl+Shift+H`(인사).
 - 이 값들은 `config.json`으로 덮어쓸 수 있어요 (README "커스터마이징" 참고).
 
 ## 이름·링크·날짜는 한 곳에서만 정한다
@@ -102,7 +102,7 @@ const ANIM = {
 | 상태 | frames | motion | fx | loop | ms | 트리거 |
 | --- | --- | --- | --- | --- | --- | --- |
 | `idle` | gdg-04 | breathe | – | ✅ | – | 평상시 |
-| `sleeping` | gdg-06 | sleep | zzz | ✅ | – | 유휴 90초 |
+| `sleeping` | gdg-06 | sleep | zzz | ✅ | – | 유휴 5분 (트레이에서 조절) |
 | `walking` | gdg-04 | walk | – | ✅ | – | `/activity` 이동 · 가끔 산책 |
 | `working` | gdg-02 | typing | – | ✅ | – | 빌드/테스트 진행 중 |
 | `happy` | gdg-05 | hop | – | ✅ | – | 성공·정보 알림 |
