@@ -160,7 +160,7 @@ node scripts/send.js state sleeping
         "hooks": [
           {
             "type": "command",
-            "command": "curl -s -X POST localhost:7842/notify -H 'Content-Type: application/json' -d '{\"title\":\"⭐️ 야호~작업 완료~🎵⭐️\",\"message\":\"Claude Code가 작업을 마쳤어요\",\"level\":\"success\"}' >/dev/null 2>&1 || true"
+            "command": "curl -s -X POST localhost:7842/notify -H 'Content-Type: application/json' -d '{\"title\":\"야호~ 작업 완료!\",\"message\":\"Claude Code가 작업을 마쳤어요\",\"level\":\"success\"}' >/dev/null 2>&1 || true"
           }
         ]
       }
@@ -180,6 +180,7 @@ node scripts/send.js state sleeping
 ```
 
 - 앱이 꺼져 있으면 `|| true`로 무시하므로 Claude Code를 막지 않습니다
+- 제목에 이모지를 넣지 않은 건 Windows의 curl이 이모지를 `?`로 바꿔 보내기 때문입니다
 - 포트·토큰을 바꿨으면 URL/`x-token`을 맞추세요
 - 적용이 안 되면 Claude Code에서 `/hooks`를 열거나 재시작하세요
 
