@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GDGoC CNU 마스코트</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="stage">
+      <!-- 말풍선 (알림) — 업로드된 SVG 모양, 텍스트는 Gulim 으로 오버레이 -->
+      <div id="bubble" class="hidden">
+        <svg id="bubble-shape" viewBox="0 0 279 214" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path class="bubble-body" d="M139.607 0.560547C216.375 0.560716 278.607 40.4073 278.607 89.5605C278.607 138.714 216.375 178.56 139.607 178.561C123.668 178.561 108.356 176.841 94.0967 173.679C90.2321 180.736 78.7061 185.857 65.0859 185.857C48.299 185.857 34.6904 178.079 34.6904 168.483C34.6904 163.118 38.9445 158.322 45.6299 155.135C17.9553 138.866 0.607476 115.512 0.607422 89.5605C0.607422 40.4072 62.8398 0.560547 139.607 0.560547Z"/>
+          <path class="bubble-dot" transform="translate(9.699 59.85) scale(0.7)" d="M32.3311 186.357C38.7008 186.357 44.4433 187.869 48.5762 190.287C52.7211 192.712 55.1621 195.99 55.1621 199.509C55.1619 203.027 52.7209 206.304 48.5762 208.729C44.4433 211.148 38.7009 212.659 32.3311 212.659C25.9613 212.659 20.2188 211.148 16.0859 208.729C11.9413 206.304 9.50016 203.027 9.5 199.509C9.5 195.99 11.9411 192.712 16.0859 190.287C20.2188 187.869 25.9613 186.357 32.3311 186.357Z"/>
+        </svg>
+        <img id="bubble-img" class="hidden" alt="" draggable="false" />
+        <!-- gdg 알림 꼬리. 몸통은 텍스트만큼 늘어나야 해서 CSS 박스로 두고 꼬리만 SVG다.
+             우하단 꼬리 모양을 좌우 반전해 좌하단의 마스코트를 가리킨다. -->
+        <svg id="bubble-tail" viewBox="45.5 64.5 19 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path
+            fill="currentColor"
+            d="M61.999 65C61.4467 65 61.0095 65.4521 60.9003 65.9935C60.8188 66.3974 60.6886 66.7837 60.5161 67.146C60.3391 67.5178 60.5872 68 60.999 68C62.6559 68 63.999 69.3431 63.999 71C63.999 72.6569 62.6559 74 60.999 74H56.999C55.3422 74 53.999 72.6569 53.999 71C53.999 70.5023 53.6506 70 53.1529 70H50.999C48.3237 70 46.1396 67.8989 46.0059 65.2568C46.0021 65.1139 45.8851 65 45.7421 65Z"
+          />
+        </svg>
+        <!-- 경고·긴급 알림의 '!' (막대 + 점) -->
+        <span id="bubble-bang" aria-hidden="true"><i></i><b></b></span>
+        <!-- 배너 스타일은 꼬리 대신 테두리와 같은 규격의 노치를 쓴다 -->
+        <span id="bubble-notch" aria-hidden="true"></span>
+        <div id="bubble-text">
+          <div id="bubble-title"></div>
+          <div id="bubble-msg"></div>
+        </div>
+      </div>
+
+      <!-- 더블클릭 팝업 (종강 D-day) — gdg 알림과 같은 폼 규격 -->
+      <div id="click-bubble" class="hidden">
+        <div id="cb-row">
+          <span id="cb-dday">D-–</span>
+        </div>
+        <!-- gdg 알림과 같은 꼬리 -->
+        <svg id="cb-tail" viewBox="45.5 64.5 19 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path
+            fill="currentColor"
+            d="M61.999 65C61.4467 65 61.0095 65.4521 60.9003 65.9935C60.8188 66.3974 60.6886 66.7837 60.5161 67.146C60.3391 67.5178 60.5872 68 60.999 68C62.6559 68 63.999 69.3431 63.999 71C63.999 72.6569 62.6559 74 60.999 74H56.999C55.3422 74 53.999 72.6569 53.999 71C53.999 70.5023 53.6506 70 53.1529 70H50.999C48.3237 70 46.1396 67.8989 46.0059 65.2568C46.0021 65.1139 45.8851 65 45.7421 65Z"
+          />
+        </svg>
+        <!-- '×' 글리프는 폰트 기준선 탓에 정중앙에 안 와서 선 2개 SVG로 그린다 -->
+        <button id="cb-close" aria-label="닫기">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"
+               stroke-linecap="round" aria-hidden="true">
+            <line x1="3.2" y1="3.2" x2="8.8" y2="8.8" />
+            <line x1="8.8" y1="3.2" x2="3.2" y2="8.8" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- DND 표시 -->
+      <div id="dnd-badge" class="hidden">🔕</div>
+
+      <!-- 캐릭터 (character/gdg-*.png 스티커 + 코드 모션) -->
+      <canvas id="cat" width="280" height="280"></canvas>
+    </div>
+    <script src="../shared/time.js"></script>
+    <script src="../shared/brand.js"></script>
+    <script src="mascot.js"></script>
+  </body>
+</html>

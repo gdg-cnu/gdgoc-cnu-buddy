@@ -1,0 +1,475 @@
+/* 픽셀 폰트 MonaS12 (SIL OFL 1.1) — 말풍선 텍스트용, 앱에 번들 */
+@font-face {
+  font-family: "MonaS12";
+  font-style: normal;
+  font-weight: 700;
+  src: url("fonts/MonaS12-Bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "MonaS12";
+  font-style: normal;
+  font-weight: 400;
+  src: url("fonts/MonaS12.woff2") format("woff2");
+}
+
+/* 프리텐다드 (SIL OFL 1.1) — 말풍선 텍스트 대안 폰트, 앱에 번들 */
+@font-face {
+  font-family: "Pretendard";
+  font-style: normal;
+  font-weight: 700;
+  src: url("fonts/Pretendard-Bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Pretendard";
+  font-style: normal;
+  font-weight: 400;
+  src: url("fonts/Pretendard-Regular.woff2") format("woff2");
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+  font-family: -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  cursor: default;
+}
+
+:root {
+  --bubble-left: 56px;
+  --bubble-bottom: 118px; /* 꼬리 끝이 머리 위 — mascot.js 의 FOOT_Y·CHAR_H 와 맞춘다 */
+}
+
+#stage {
+  position: absolute;
+  bottom: 8px;
+  left: 10px; /* 마스코트를 좌하단으로 */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+/* 캐릭터 — 스티커 PNG + 이펙트를 캔버스에 그린다. 위쪽은 점프·이펙트 여유 */
+#cat {
+  width: 140px;
+  height: 140px; /* mascot.js 의 LW x LH */
+  -webkit-app-region: no-drag;
+  cursor: grab;
+  z-index: 2;
+}
+#cat:active {
+  cursor: grabbing;
+}
+
+/* -------- 말풍선 (업로드 SVG 모양 · 좌하단 기준 고정 · Gulim 텍스트) -------- */
+#bubble {
+  position: fixed;
+  left: var(--bubble-left);
+  right: auto;
+  top: auto;
+  bottom: var(--bubble-bottom);
+  width: 142px; /* 캐릭터 0.5배에 맞춰 축소 */
+  z-index: 5;
+  transform-origin: 18% 88%; /* 꼬리(좌하단)에서 팝업 */
+  animation: pop 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+#bubble-shape {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.22));
+}
+#bubble-shape .bubble-body,
+#bubble-shape .bubble-dot {
+  fill: #ffffff;
+  stroke: #202124;
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+/* 텍스트 영역 — 말풍선 둥근 부분 안쪽(꼬리 제외)에 중앙 정렬 */
+#bubble-text {
+  position: absolute;
+  top: 6%;
+  left: 10%;
+  right: 10%;
+  bottom: 25%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  /* 픽셀 폰트 — 안티앨리어싱 끄면 도트가 또렷해짐 */
+  font-family: "MonaS12", "Gulim", "굴림", "AppleGothic", sans-serif;
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+}
+#bubble-title {
+  font-size: 12px;
+  font-weight: 400;
+  color: #202124;
+  line-height: 1.35;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+#bubble-msg {
+  font-size: 12px;
+  font-weight: 400;
+  color: #2b2b2b;
+  line-height: 1.35;
+  margin-top: 4px;
+  word-break: keep-all;
+}
+/* 상태 구분은 제목 앞 이모지(✅/🚨/⚠️/💬)로. 실패 시 살짝 흔들림 */
+#bubble.level-urgent {
+  animation: pop 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
+    shake 0.5s ease 0.28s 2;
+}
+
+/* -------- 말풍선 폰트 전환 — 픽셀(MonaS12) vs 프리텐다드 --------
+   D-day 팝업(#cb-row)은 gdg 폼 고정 타이포라 전환 대상이 아니다. */
+body.font-pretendard #bubble-text {
+  font-family: "Pretendard", -apple-system, "Apple SD Gothic Neo", sans-serif;
+  -webkit-font-smoothing: antialiased; /* 픽셀 폰트용 none 해제 */
+  font-smooth: auto;
+  letter-spacing: -0.01em;
+}
+body.font-pretendard #bubble-title {
+  font-size: 12.5px;
+}
+body.font-pretendard #bubble-msg {
+  font-size: 11.5px;
+  font-weight: 400;
+}
+
+/* -------- JSON 픽셀 말풍선 (charactor/말풍선-*.json) -------- */
+#bubble-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.22));
+}
+/* 만화: 흰 몸통 + 먹 테두리, 꼬리 하단 */
+#bubble.style-comic {
+  width: 208px;
+}
+#bubble.style-comic #bubble-text {
+  top: 6%;
+  left: 15%;
+  right: 10%;
+  bottom: 22%;
+}
+/* 퍼플: 통짜 퍼플 슬랩, 흰 텍스트 */
+#bubble.style-purple {
+  width: 196px;
+}
+#bubble.style-purple #bubble-text {
+  top: 2%;
+  left: 13%;
+  right: 8%;
+  bottom: 16%;
+}
+#bubble.style-purple #bubble-title {
+  color: #ffffff;
+}
+#bubble.style-purple #bubble-msg {
+  color: #dedce3;
+}
+/* 코지: 크림 몸통 + 주황 탭 */
+#bubble.style-cozy {
+  width: 212px;
+}
+#bubble.style-cozy #bubble-text {
+  top: 10%;
+  left: 13%;
+  right: 8%;
+  bottom: 24%;
+}
+#bubble.style-cozy #bubble-msg {
+  color: #5a5344;
+}
+
+/* -------- CSS 박스 말풍선 (gdg / banner) --------
+   JSON 픽셀 말풍선과 달리 몸통을 CSS 박스로 그려서, 이미지를 다시 뽑지 않고도
+   텍스트 길이에 따라 그대로 늘어난다 (fit-content + max-width). */
+#bubble-tail,
+#bubble-bang,
+#bubble-notch {
+  display: none;
+}
+#bubble.style-gdg,
+#bubble.style-banner {
+  left: var(--bubble-left);
+  right: auto;
+  top: auto;
+  bottom: var(--bubble-bottom);
+  width: fit-content;
+  max-width: 233px;
+  transform-origin: 42px 100%; /* 꼬리에서 팝업 (폭이 변해도 고정) */
+}
+#bubble.style-gdg #bubble-text,
+#bubble.style-banner #bubble-text {
+  position: static; /* 몸통이 텍스트를 감싸므로 절대배치 해제 */
+  inset: auto;
+  min-width: 0;
+  font-family: "Pretendard", -apple-system, "Apple SD Gothic Neo", sans-serif;
+  -webkit-font-smoothing: antialiased; /* 픽셀 폰트용 none 해제 */
+  font-smooth: auto;
+}
+/* 창 폭이 좁아 제목도 줄바꿈된다 — 어절 단위로 끊는다 */
+#bubble.style-gdg #bubble-title,
+#bubble.style-banner #bubble-title {
+  display: block;
+  word-break: keep-all;
+}
+
+/* gdg 알림 — 진한 초록 몸통 + 흰 텍스트 */
+#bubble.style-gdg {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 5px;
+  background: #3a5d16;
+  color: #3a5d16; /* 꼬리 fill=currentColor 가 몸통색을 따라간다 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.22);
+}
+#bubble.style-gdg #bubble-tail {
+  display: block;
+  position: absolute;
+  left: 35px;
+  top: calc(100% - 0.5px); /* 0.5px 겹쳐 몸통과의 이음선을 없앤다 */
+  width: 15px;
+  height: 8px;
+  transform: scaleX(-1); /* 우하단 → 좌하단 */
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.2));
+}
+#bubble.style-gdg #bubble-title {
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+#bubble.style-gdg #bubble-msg {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin-top: 1px; /* 기본 4px → 세로 높이 축소 */
+}
+/* '!' — 경고·긴급일 때만 텍스트 왼쪽에 세운다 */
+#bubble.style-gdg.level-urgent #bubble-bang,
+#bubble.style-gdg.level-warn #bubble-bang {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-shrink: 0;
+}
+#bubble-bang i,
+#bubble-bang b {
+  display: block;
+  width: 3.5px;
+  background: #ffffff;
+  border-radius: 1px;
+}
+/* 몸통 높이를 '!'가 끌고 올라가지 않도록 텍스트 높이에 맞춰 축소 */
+#bubble-bang i {
+  height: 12px;
+}
+#bubble-bang b {
+  height: 3.5px;
+}
+
+/* 텍스트 배너 — 흰 몸통 + 초록 1px 테두리, 각진 프레임 */
+#bubble.style-banner {
+  padding: 11px 19px;
+  background: #ffffff;
+  border: 1px solid #6fba2c;
+  border-radius: 0;
+  box-shadow: 0 4px 8px rgba(32, 33, 36, 0.14);
+}
+#bubble.style-banner #bubble-title {
+  color: #202124;
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: -0.0375em;
+  text-transform: uppercase;
+}
+#bubble.style-banner #bubble-msg {
+  color: rgba(32, 33, 36, 0.72);
+  font-size: 11.5px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+}
+#bubble.style-banner #bubble-notch {
+  display: block;
+  position: absolute;
+  left: 20px;
+  bottom: -6px;
+  width: 10px;
+  height: 10px;
+  background: #ffffff;
+  border-right: 1px solid #6fba2c;
+  border-bottom: 1px solid #6fba2c;
+  transform: rotate(45deg);
+}
+
+/* -------- 더블클릭 팝업 (종강 D-day) — gdg 폼 기반 --------
+   알림 말풍선(style-gdg)과 몸통·꼬리·타이포 규격을 공유한다. */
+#click-bubble {
+  position: fixed;
+  left: var(--bubble-left);
+  bottom: var(--bubble-bottom);
+  width: fit-content;
+  max-width: 233px;
+  display: flex;
+  align-items: center;
+  padding: 6px 34px 6px 12px; /* 오른쪽은 닫기 버튼 자리 */
+  border-radius: 5px;
+  background: #3a5d16;
+  color: #3a5d16; /* 꼬리 fill=currentColor 가 몸통색을 따라간다 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.22);
+  z-index: 6;
+  transform-origin: 42px 100%; /* 꼬리에서 팝업 */
+  animation: pop 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+#cb-tail {
+  display: block;
+  position: absolute;
+  left: 35px;
+  top: calc(100% - 0.5px); /* 0.5px 겹쳐 몸통과의 이음선을 없앤다 */
+  width: 15px;
+  height: 8px;
+  transform: scaleX(-1); /* 우하단 → 좌하단 */
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.2));
+}
+#cb-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: "Pretendard", -apple-system, "Apple SD Gothic Neo", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+#cb-dday {
+  font-weight: 400;
+  font-size: 12.5px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  white-space: nowrap;
+}
+#cb-dday .dday-num {
+  color: #ffffff;
+  font-weight: 700;
+}
+/* 닫기 버튼 — 몸통이 낮아 바깥에 두면 글자를 덮는다. 안쪽 세로 중앙에 배치 */
+#cb-close {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.14);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+  z-index: 3;
+  padding: 0;
+  transition: background 0.15s ease;
+}
+#cb-close svg {
+  width: 11px;
+  height: 11px;
+  display: block; /* 인라인 여백 제거 — 원 정중앙 정렬 */
+}
+#cb-close:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+/* 키보드 포커스 — Tab 이동 시에만 표시 */
+button:focus-visible {
+  outline: 2px solid #202124;
+  outline-offset: 2px;
+}
+#cb-close:focus-visible {
+  outline: 2px solid #ffffff; /* 진한 초록 몸통 위에서 보이도록 */
+}
+
+/* 상태메시지가 뜰 때 D-day 팝업이 빠르게 사라지는 애니메이션 */
+#click-bubble.closing {
+  animation: popout 0.15s ease forwards;
+  pointer-events: none;
+}
+@keyframes popout {
+  to {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+}
+
+.hidden {
+  display: none !important;
+}
+
+#dnd-badge {
+  position: absolute;
+  top: 0;
+  right: 28px;
+  font-size: 16px;
+  z-index: 4;
+  opacity: 0.85;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.2) translateY(12px);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-3px);
+  }
+  75% {
+    transform: translateX(3px);
+  }
+}
+
+/* 모션 최소화 설정 존중 — 말풍선 팝·흔들림 CSS 애니메이션 억제
+   (캐릭터 모션은 mascot.js 가 같은 설정을 보고 끈다) */
+@media (prefers-reduced-motion: reduce) {
+  #bubble,
+  #click-bubble,
+  #click-bubble.closing {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

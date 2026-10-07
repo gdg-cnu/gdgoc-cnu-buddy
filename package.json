@@ -1,0 +1,56 @@
+{
+  "name": "gdgoc-buddy",
+  "version": "0.1.0",
+  "description": "GDGoC CNU 마스코트 데스크톱 앱 — 빌드·테스트·Web Vitals 에 반응하는 상주 캐릭터 (Electron)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gdg-cnu/gdgoc-cnu-buddy.git"
+  },
+  "main": "main.js",
+  "bin": {
+    "gdgoc-buddy": "scripts/start-branded-dev.js",
+    "gdgoc": "integrations/gdgoc.js",
+    "mascot-watch": "integrations/mascot-watch.js",
+    "mascot-dev": "integrations/mascot-dev.js"
+  },
+  "files": [
+    "main.js",
+    "preload.js",
+    "lib/",
+    "renderer/",
+    "shared/",
+    "character/gdg-*.png",
+    "character/bubble-*.json",
+    "assets/",
+    "integrations/",
+    "scripts/",
+    "CUSTOMIZING.md",
+    "OVERVIEW.md",
+    "README.md"
+  ],
+  "scripts": {
+    "start": "node scripts/start-branded-dev.js",
+    "start:raw": "electron .",
+    "notify": "node scripts/send.js",
+    "watch": "node integrations/mascot-watch.js"
+  },
+  "keywords": [
+    "gdgoc",
+    "gdg",
+    "electron",
+    "mascot",
+    "desktop-pet",
+    "web-vitals",
+    "build-tools",
+    "developer-tools",
+    "vite"
+  ],
+  "author": "GDGoC CNU",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "electron": "^33.2.0"
+  }
+}

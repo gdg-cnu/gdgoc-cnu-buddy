@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>학기 안내</title>
+    <link rel="stylesheet" href="guide.css" />
+  </head>
+  <body>
+    <div id="card">
+      <header>
+        <div class="head-left">
+          <span class="paw"></span>
+          <div>
+            <div id="title">학기 안내</div>
+            <div id="subtitle"></div>
+          </div>
+        </div>
+        <div class="head-right">
+          <span id="clock">--:--</span>
+          <button id="close" title="닫기" aria-label="안내 닫기">✕</button>
+        </div>
+      </header>
+
+      <div id="content"><!-- phase 별로 채워짐 --></div>
+
+      <footer><span id="footer-text"></span></footer>
+    </div>
+    <script src="../shared/time.js"></script>
+    <script src="../shared/drag.js"></script>
+    <script src="../shared/brand.js"></script>
+    <script src="guide.js"></script>
+  </body>
+</html>

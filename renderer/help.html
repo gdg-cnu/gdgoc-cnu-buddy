@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>사용 안내</title>
+    <link rel="stylesheet" href="help.css" />
+  </head>
+  <body>
+    <div id="card">
+      <header>
+        <div class="head-left">
+          <span class="paw"></span>
+          <div>
+            <div id="title">사용 안내</div>
+            <div id="subtitle"><!-- help.js 가 채운다 --></div>
+          </div>
+        </div>
+        <div class="head-right">
+          <button id="close" title="닫기" aria-label="사용 안내 닫기">✕</button>
+        </div>
+      </header>
+
+      <div id="stage">
+        <button id="prev" class="arrow" aria-label="이전 페이지">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+        </button>
+
+        <section id="page" aria-live="polite"><!-- help.js 가 채운다 --></section>
+
+        <button id="next" class="arrow" aria-label="다음 페이지">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6" /></svg>
+        </button>
+      </div>
+
+      <div id="dots" role="tablist" aria-label="페이지"><!-- help.js 가 채운다 --></div>
+
+      <footer>
+        <label id="never">
+          <input type="checkbox" id="never-box" />
+          <span>다시 보지 않기</span>
+        </label>
+      </footer>
+    </div>
+    <script src="../shared/brand.js"></script>
+    <script src="../shared/drag.js"></script>
+    <script src="help.js"></script>
+  </body>
+</html>
